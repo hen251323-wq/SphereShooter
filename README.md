@@ -1,4 +1,4 @@
-# SphereShooter
+# Sphere Shooter
 
 Cool Shooter of Spheres
 
