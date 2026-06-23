@@ -1,0 +1,151 @@
+[gd_scene format=3 uid="uid://dgtiu1exptqx"]
+
+[ext_resource type="Script" uid="uid://c7sgek7mbvhk6" path="res://structure_spawner.gd" id="1_ig7tw"]
+[ext_resource type="Material" uid="uid://b5o3m1jk0k1rm" path="res://sphere_material.res" id="2_0xm2m"]
+[ext_resource type="Script" uid="uid://dy4yit8xcr7sw" path="res://canon.gd" id="2_h2yge"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_7dm0k"]
+disable_fog = true
+vertex_color_use_as_albedo = true
+albedo_color = Color(0, 1, 0.49411765, 1)
+metallic_specular = 0.0
+
+[sub_resource type="BoxMesh" id="BoxMesh_ig7tw"]
+material = SubResource("StandardMaterial3D_7dm0k")
+size = Vector3(20, 0.2, 3)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_0xm2m"]
+size = Vector3(20, 0.2, 3)
+
+[sub_resource type="Gradient" id="Gradient_h2yge"]
+interpolation_color_space = 2
+colors = PackedColorArray(0.30110154, 0.6138035, 1, 1, 1, 1, 1, 1)
+
+[sub_resource type="FastNoiseLite" id="FastNoiseLite_1bvp3"]
+
+[sub_resource type="NoiseTexture2D" id="NoiseTexture2D_lquwl"]
+noise = SubResource("FastNoiseLite_1bvp3")
+color_ramp = SubResource("Gradient_h2yge")
+seamless = true
+
+[sub_resource type="PanoramaSkyMaterial" id="PanoramaSkyMaterial_7mycd"]
+panorama = SubResource("NoiseTexture2D_lquwl")
+
+[sub_resource type="Sky" id="Sky_272bh"]
+sky_material = SubResource("PanoramaSkyMaterial_7mycd")
+
+[sub_resource type="Environment" id="Environment_5vw27"]
+background_mode = 2
+sky = SubResource("Sky_272bh")
+ambient_light_source = 3
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ig7tw"]
+albedo_color = Color(1, 0.7012719, 0.5303993, 1)
+
+[sub_resource type="BoxMesh" id="BoxMesh_0xm2m"]
+material = SubResource("StandardMaterial3D_ig7tw")
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_h2yge"]
+margin = 0.01
+size = Vector3(0.5, 0.5, 0.5)
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_ig7tw"]
+top_radius = 0.25
+bottom_radius = 0.3
+height = 4.0
+radial_segments = 8
+
+[sub_resource type="CylinderShape3D" id="CylinderShape3D_0xm2m"]
+height = 4.0
+radius = 0.25
+
+[sub_resource type="SphereMesh" id="SphereMesh_h2yge"]
+material = ExtResource("2_0xm2m")
+radial_segments = 16
+rings = 8
+
+[sub_resource type="SphereShape3D" id="SphereShape3D_1bvp3"]
+
+[sub_resource type="CylinderMesh" id="CylinderMesh_0xm2m"]
+material = ExtResource("2_0xm2m")
+top_radius = 0.05
+bottom_radius = 0.1
+height = 1.0
+radial_segments = 8
+rings = 2
+
+[node name="Main" type="Node3D" unique_id=1126417247]
+
+[node name="Plane" type="StaticBody3D" parent="." unique_id=140349721]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Plane" unique_id=291783865]
+mesh = SubResource("BoxMesh_ig7tw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Plane" unique_id=483217293]
+shape = SubResource("BoxShape3D_0xm2m")
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1597528934]
+environment = SubResource("Environment_5vw27")
+
+[node name="Sun" type="DirectionalLight3D" parent="." unique_id=1749978200]
+transform = Transform3D(0.4067366, -0.6459742, 0.6459742, 0, 0.70710677, 0.70710677, -0.9135455, -0.2876062, 0.2876062, 0, 4.748928, 0)
+light_energy = 0.5
+shadow_enabled = true
+
+[node name="Camera3D" type="Camera3D" parent="." unique_id=537080390]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 5.2250648, 9.397921)
+
+[node name="StructureSpawner" type="Node3D" parent="." unique_id=976841766 node_paths=PackedStringArray("template_body")]
+script = ExtResource("1_ig7tw")
+template_body = NodePath("CubeTemplate")
+cube_offset = Vector3(0.6, 0.5, 0.6)
+
+[node name="CubeTemplate" type="RigidBody3D" parent="StructureSpawner" unique_id=115817505]
+process_mode = 4
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.35, 0)
+mass = 0.01
+gravity_scale = 0.25
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="StructureSpawner/CubeTemplate" unique_id=295447099]
+mesh = SubResource("BoxMesh_0xm2m")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="StructureSpawner/CubeTemplate" unique_id=1775228990]
+shape = SubResource("BoxShape3D_h2yge")
+
+[node name="SpherePillar" type="StaticBody3D" parent="." unique_id=969174771]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 2, 0)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="SpherePillar" unique_id=2134109024]
+mesh = SubResource("CylinderMesh_ig7tw")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="SpherePillar" unique_id=1094394541]
+shape = SubResource("CylinderShape3D_0xm2m")
+
+[node name="Canon" type="Node3D" parent="." unique_id=1995703856 node_paths=PackedStringArray("direction_director_node", "base_sphere")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -9, 5, 0)
+script = ExtResource("2_h2yge")
+direction_director_node = NodePath("DirectionDirector")
+base_sphere = NodePath("Sphere")
+sphere_velocity = Vector3(4, 0, 0)
+minimal_sphere_velocity_length = 4.0
+maximal_sphere_velocity_length = 48.0
+rotation_speed = 90.0
+velocity_increase = 2.0
+
+[node name="Sphere" type="RigidBody3D" parent="Canon" unique_id=413015813]
+process_mode = 4
+mass = 0.1
+freeze = true
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Canon/Sphere" unique_id=538723655]
+mesh = SubResource("SphereMesh_h2yge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Canon/Sphere" unique_id=1138459024]
+shape = SubResource("SphereShape3D_1bvp3")
+
+[node name="DirectionDirector" type="Node3D" parent="Canon" unique_id=2019429501]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="Canon/DirectionDirector" unique_id=1178362002]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+mesh = SubResource("CylinderMesh_0xm2m")
